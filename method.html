@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Delivery App - Payment Factory</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    select, button {
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Payment Method Selection</h1>
+
+  <label for="paymentType">Choose a payment method:</label><br>
+  <select id="paymentType">
+    <option value="UPI">UPI</option>
+    <option value="Wallet">Wallet</option>
+    <option value="COD">Cash on Delivery</option>
+    <option value="CreditCard">Credit Card</option>
+  </select>
+  <br>
+
+  <button onclick="makePayment()">Make Payment</button>
+
+  <div id="output"></div>
+
+  <script>
+    // Base interface for payments
+    class Payment {
+      pay() {
+        throw new Error("pay() method must be implemented.");
+      }
+    }
+
+    // Concrete payment types
+    class UPIPayment extends Payment {
+      pay() {
+        return "Paid using UPI.";
+      }
+    }
+
+    class WalletPayment extends Payment {
+      pay() {
+        return "Paid using Wallet.";
+      }
+    }
+
+    class CODPayment extends Payment {
+      pay() {
+        return "Payment will be made in Cash on Delivery.";
+      }
+    }
+
+    class CreditCardPayment extends Payment {
+      pay() {
+        return "Paid using Credit Card.";
+      }
+    }
+
+    // Factory class
+    class PaymentFactory {
+      static createPayment(method) {
+        switch (method) {
+          case "UPI":
+            return new UPIPayment();
+          case "Wallet":
+            return new WalletPayment();
+          case "COD":
+            return new CODPayment();
+          case "CreditCard":
+            return new CreditCardPayment();
+          default:
+            throw new Error("Invalid payment method selected.");
+        }
+      }
+    }
+
+    // Function to handle user interaction
+    function makePayment() {
+      const method = document.getElementById("paymentType").value;
+      try {
+        const payment = PaymentFactory.createPayment(method);
+        document.getElementById("output").innerText = payment.pay();
+      } catch (error) {
+        document.getElementById("output").innerText = error.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
